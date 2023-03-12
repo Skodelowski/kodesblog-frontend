@@ -1,15 +1,19 @@
 import { useState, useEffect } from 'react'
-import { Link, useParams, useNavigate } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import axiosRequest from '@services/axiosRequest'
-import { Container, ButtonGroup, Button, Breadcrumb } from 'react-bootstrap'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faRightToBracket, faPlus } from '@fortawesome/free-solid-svg-icons'
+import { Container, Breadcrumb, Col, Row } from 'react-bootstrap'
+import PostCard from '@components/PostCard'
 
 const Category = () => {
   const [category, setCategory] = useState({})
   const [parentCategory, setParentCategory] = useState({})
+  const [postsList, setPostsList] = useState(null)
+  const userConnected = localStorage.getItem('token')
 
   let categorySlug = useParams()
+
+  let colCount = 0
+  let row = '</Row><Row>'
 
   useEffect(() => {
     const getCategory = async (slug) => {
@@ -27,6 +31,24 @@ const Category = () => {
         })
     }
     getCategory(categorySlug.slug)
+
+    const getPosts = async (slug) => {
+      try {
+        await axiosRequest
+          .get(`/categories/${slug}/posts`)
+          .then((res) => res.data.posts)
+          .then((data) => {
+            let posts = []
+            data.map((post) => {
+              posts.push(post)
+            })
+            setPostsList(posts)
+          })
+      } catch (err) {
+        console.log(err)
+      }
+    }
+    getPosts(categorySlug.slug)
   }, [])
 
   //console.log(category, parentCategory)
@@ -48,7 +70,22 @@ const Category = () => {
             </Breadcrumb.Item>
           </Breadcrumb>
           <h1>{category.title}</h1>
-          <p>...</p>
+          {userConnected && postsList && (
+            <Row>
+              {postsList.length > 0 &&
+                postsList.map((post, key) => {
+                  colCount = colCount === 3 ? 0 : colCount++
+                  return (
+                    <>
+                      {colCount === 3 && { row }}
+                      <Col>
+                        <PostCard key={key} post={post} />
+                      </Col>
+                    </>
+                  )
+                })}
+            </Row>
+          )}
         </Container>
       )}
     </div>

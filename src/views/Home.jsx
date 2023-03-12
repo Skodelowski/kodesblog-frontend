@@ -3,28 +3,86 @@
 // Affiche la liste des posts
 //import { useState, useEffect } from 'react'
 //import axiosRequest from '../services/axiosRequest'
-import { Component, useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
-import { Container, ButtonGroup, Button } from 'react-bootstrap'
+import { useState, useEffect } from 'react'
+import { Link, useLocation } from 'react-router-dom'
+import {
+  Container,
+  ButtonGroup,
+  Button,
+  Alert,
+  Row,
+  Col,
+} from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faRightToBracket, faPlus } from '@fortawesome/free-solid-svg-icons'
+import PostCard from '@components/PostCard'
+import axiosRequest from '@services/axiosRequest'
 
 const Home = () => {
+  const [postsList, setPostsList] = useState({})
   const userConnected = localStorage.getItem('token')
+  const location = useLocation()
+
+  let message = false
+
+  if (location.state) {
+    message = location.state.message
+  }
+
+  const getPosts = async () => {
+    try {
+      await axiosRequest
+        .get('/posts/all')
+        .then((res) => res.data.fullData)
+        .then((data) => {
+          let posts = []
+          data.map((post) => {
+            posts.push(post)
+          })
+          setPostsList(posts)
+        })
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  useEffect(() => {
+    getPosts()
+  }, [])
+
+  let colCount = 0
+  let row = '</Row><Row>'
 
   return (
     <Container>
+      {message && <Alert variant="success">{message}</Alert>}
       <h1>Welcome aboard !</h1>
       <p>A blog about web development & tech, all for CDA students.</p>
       {!userConnected && (
         <ButtonGroup aria-label="Connection choices">
-          <Button as={Link} to="/login">
+          <Button variant="info" as={Link} to="/login">
             <FontAwesomeIcon icon={faRightToBracket} /> Log in
           </Button>
-          <Button as={Link} to="/signup">
+          <Button variant="info" as={Link} to="/signup">
             <FontAwesomeIcon icon={faPlus} /> Sign up
           </Button>
         </ButtonGroup>
+      )}
+      {userConnected && postsList && (
+        <Row>
+          {postsList.length > 0 &&
+            postsList.map((post, key) => {
+              colCount = colCount === 3 ? 0 : colCount++
+              return (
+                <>
+                  {colCount === 3 && { row }}
+                  <Col>
+                    <PostCard key={key} post={post} />
+                  </Col>
+                </>
+              )
+            })}
+        </Row>
       )}
     </Container>
   )

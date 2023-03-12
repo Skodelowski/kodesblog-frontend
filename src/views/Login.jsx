@@ -37,7 +37,7 @@ const Login = () => {
             localStorage.setItem('user', JSON.stringify(userData.data.user))
             if (userData.status === 200) {
               setTimeout(() => {
-                navigate('/')
+                navigate(0)
               }, 500)
             }
           })
@@ -60,17 +60,17 @@ const Login = () => {
 
   return (
     <Container>
-      {alert && <Alert variant="warning">{alert}</Alert>}
-      {register && (
-        <Alert variant="success">
-          Account successfully created ! You can now log in !
-        </Alert>
-      )}
       <h1>Log in</h1>
       <p>An account is required to access the blog.</p>
       <a href="/signup">No account yet ? Sign up here :)</a>
       <hr />
       <Form onSubmit={onSubmit}>
+        {alert && <Alert variant="warning">{alert}</Alert>}
+        {register && (
+          <Alert variant="success">
+            Account successfully created ! You can now log in !
+          </Alert>
+        )}
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Email address</Form.Label>
           <Form.Control name="email" type="email" placeholder="Enter email" />

@@ -13,8 +13,6 @@ const Signup = ({ user }) => {
     return <Navigate to="/" replace />
   }
 
-  const onSubmit = async () => {}
-
   return (
     <Container>
       <h1>Sign up</h1>

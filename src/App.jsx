@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Home from '@pages/Home'
 import Login from '@pages/Login'
 import Signup from '@pages/Signup'
+import CreatePost from '@pages/CreatePost'
 import UserProfile from '@pages/UserProfile'
 import UserProfileEdit from '@pages/UserProfileEdit'
 import Category from '@pages/Category'
@@ -31,6 +32,7 @@ function App() {
         <Route path="profile/:id" element={<UserProfile />} />
         <Route path="profile/:id/edit" element={<UserProfileEdit />} />
         <Route path="categories/:slug" element={<Category />} />
+        <Route path="post/create" element={<CreatePost />} />
       </Routes>
     </Router>
   )

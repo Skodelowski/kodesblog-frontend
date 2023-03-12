@@ -82,13 +82,7 @@ const UserForm = (props) => {
         encType="multipart/form-data"
       >
         {methode === 'edit' && (
-          <Form.Field
-            id="userid"
-            name="userid"
-            control={Input}
-            value={user.id}
-            type="hidden"
-          />
+          <Form.Text id="userid" name="userid" value={user.id} type="hidden" />
         )}
         <Row>
           <Col>

@@ -2,9 +2,11 @@
 // ---- Logo à gauche
 // ---- À droite: bouton "Liste", lien vers l'édition du profil (avatar de l'utilisateur connecté), déconnexion
 // ---- Option admin: bouton "Ajouter un utilisateur" en plus
-import { Component, useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Container, Nav, Navbar, NavDropdown } from 'react-bootstrap'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPenToSquare } from '@fortawesome/free-regular-svg-icons'
 import axiosRequest from '@services/axiosRequest'
 
 const NavHeader = ({ user }) => {
@@ -63,7 +65,11 @@ const NavHeader = ({ user }) => {
               Home
             </Nav.Link>
             {isLoggedIn && (
-              <NavDropdown title="Categories" id="basic-nav-dropdown">
+              <NavDropdown
+                menuVariant="dark"
+                title="Categories"
+                id="basic-nav-dropdown"
+              >
                 {categories.map((category, key) => {
                   return (
                     <NavDropdown.Item
@@ -79,6 +85,9 @@ const NavHeader = ({ user }) => {
           </Nav>
           {isLoggedIn ? (
             <Nav>
+              <Nav.Link as={Link} to={`/post/create`}>
+                Write a new post <FontAwesomeIcon icon={ faPenToSquare } />
+              </Nav.Link>
               <Nav.Link as={Link} to={`/profile/${user._id}`}>
                 Profile
               </Nav.Link>
