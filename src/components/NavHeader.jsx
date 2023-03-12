@@ -65,28 +65,35 @@ const NavHeader = ({ user }) => {
               Home
             </Nav.Link>
             {isLoggedIn && (
-              <NavDropdown
-                menuVariant="dark"
-                title="Categories"
-                id="basic-nav-dropdown"
-              >
-                {categories.map((category, key) => {
-                  return (
-                    <NavDropdown.Item
-                      key={key}
-                      href={`/categories/${category.slug}`}
-                    >
-                      {category.title}
-                    </NavDropdown.Item>
-                  )
-                })}
-              </NavDropdown>
+              <>
+                {isAdmin && (
+                  <Nav.Link as={Link} to="/dashboard">
+                    Admin Dashboard
+                  </Nav.Link>
+                )}
+                <NavDropdown
+                  menuVariant="dark"
+                  title="Categories"
+                  id="basic-nav-dropdown"
+                >
+                  {categories.map((category, key) => {
+                    return (
+                      <NavDropdown.Item
+                        key={key}
+                        href={`/categories/${category.slug}`}
+                      >
+                        {category.title}
+                      </NavDropdown.Item>
+                    )
+                  })}
+                </NavDropdown>
+              </>
             )}
           </Nav>
           {isLoggedIn ? (
             <Nav>
               <Nav.Link as={Link} to={`/post/create`}>
-                Write a new post <FontAwesomeIcon icon={ faPenToSquare } />
+                Write a new post <FontAwesomeIcon icon={faPenToSquare} />
               </Nav.Link>
               <Nav.Link as={Link} to={`/profile/${user._id}`}>
                 Profile

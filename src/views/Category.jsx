@@ -4,7 +4,7 @@ import axiosRequest from '@services/axiosRequest'
 import { Container, Breadcrumb, Col, Row } from 'react-bootstrap'
 import PostCard from '@components/PostCard'
 
-const Category = () => {
+const Category = ({ user }) => {
   const [category, setCategory] = useState({})
   const [parentCategory, setParentCategory] = useState({})
   const [postsList, setPostsList] = useState(null)
@@ -51,8 +51,6 @@ const Category = () => {
     getPosts(categorySlug.slug)
   }, [])
 
-  //console.log(category, parentCategory)
-
   return (
     <div>
       {category && (
@@ -79,7 +77,7 @@ const Category = () => {
                     <>
                       {colCount === 3 && { row }}
                       <Col>
-                        <PostCard key={key} post={post} />
+                        <PostCard key={key} post={post} user={user} />
                       </Col>
                     </>
                   )

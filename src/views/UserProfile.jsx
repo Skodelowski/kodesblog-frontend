@@ -1,13 +1,19 @@
-import { useState } from 'react'
-import { useNavigate, Navigate } from 'react-router-dom'
 import { Container } from 'react-bootstrap'
-import UserForm from '@components/UserForm'
+import { useParams } from 'react-router-dom'
 
 const UserProfile = () => {
+  let { id } = useParams()
+
   return (
     <Container>
-      <h1>Welcome aboard !</h1>
+      <h1>Welcome aboard ! (User Profile infos)</h1>
       <p>A blog about web development & tech, all for CDA students !</p>
+      <hr />
+      <p>
+        Work in progress [profile card (READ) + edit form (EDIT) + admin actions
+        (EDIT, set isAdmin & DELETE)]
+      </p>
+      <a href={`/profile/${id}/edit`}>Edit link</a>
     </Container>
   )
 }

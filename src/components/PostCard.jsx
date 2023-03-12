@@ -2,14 +2,14 @@ import { useState, useEffect } from 'react'
 import { Card, Button } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBookmark } from '@fortawesome/free-solid-svg-icons'
+import { faBookmark, faPen, faXmark } from '@fortawesome/free-solid-svg-icons'
 import { faHeart } from '@fortawesome/free-regular-svg-icons'
 import axiosRequest from '@services/axiosRequest'
 
-const PostCard = ({ post }) => {
+const PostCard = ({ post, user }) => {
   const [author, setAuthor] = useState()
   const [likeCount, setLikeCount] = useState(post.likeCount)
-  const idConnectedUser = JSON.parse(localStorage.getItem('user'))._id
+  const isAdmin = user.isAdmin
 
   // 15 words insight
   const limitTextLength = (text) => {
@@ -52,6 +52,17 @@ const PostCard = ({ post }) => {
     }
   }
 
+  const deletePost = (e) => {
+    e.preventDefault()
+
+    axiosRequest.delete(`/posts/${post._id}/delete`).then((res) =>
+      navigate('/', {
+        state: { message: 'Post successfully deleted !' },
+      }),
+    )
+    window.location.reload(false)
+  }
+
   useEffect(() => {
     getAuthor()
   }, [])
@@ -70,6 +81,16 @@ const PostCard = ({ post }) => {
         <Button variant="info" as={Link} to={`/post/${post._id}`}>
           Read more
         </Button>
+        {isAdmin && (
+          <>
+            <Button variant="light" as={Link} to={`/post/${post._id}/edit`}>
+              <FontAwesomeIcon icon={faPen} />
+            </Button>
+            <Button variant="danger" onClick={deletePost}>
+              <FontAwesomeIcon icon={faXmark} />
+            </Button>
+          </>
+        )}
       </Card.Body>
       <Card.Footer>
         <Card.Link
@@ -79,9 +100,11 @@ const PostCard = ({ post }) => {
         >
           <FontAwesomeIcon icon={faHeart} /> {likeCount}
         </Card.Link>
+        {/* For favorites
         <Card.Link href="#">
           <FontAwesomeIcon icon={faBookmark} />
         </Card.Link>
+        */}
       </Card.Footer>
     </Card>
   )

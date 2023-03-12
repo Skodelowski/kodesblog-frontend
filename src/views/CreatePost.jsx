@@ -1,12 +1,7 @@
-import { useState } from 'react'
-import { useNavigate, Navigate } from 'react-router-dom'
 import { Container } from 'react-bootstrap'
 import PostForm from '@components/PostForm'
 
-const Signup = ({ user }) => {
-  const [alert, setAlert] = useState(false)
-
-  const navigate = useNavigate()
+const CreatePost = ({ user }) => {
 
   return (
     <Container>
@@ -18,4 +13,4 @@ const Signup = ({ user }) => {
   )
 }
 
-export default Signup
+export default CreatePost

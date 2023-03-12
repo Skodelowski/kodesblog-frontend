@@ -1,8 +1,3 @@
-// Affichage principal
-// Le blog est en accès privé : L'utilisateur doit être connecté, sinon redirection vers login/inscription
-// Affiche la liste des posts
-//import { useState, useEffect } from 'react'
-//import axiosRequest from '../services/axiosRequest'
 import { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import {
@@ -18,7 +13,7 @@ import { faRightToBracket, faPlus } from '@fortawesome/free-solid-svg-icons'
 import PostCard from '@components/PostCard'
 import axiosRequest from '@services/axiosRequest'
 
-const Home = () => {
+const Home = ({ user }) => {
   const [postsList, setPostsList] = useState({})
   const userConnected = localStorage.getItem('token')
   const location = useLocation()
@@ -77,7 +72,7 @@ const Home = () => {
                 <>
                   {colCount === 3 && { row }}
                   <Col>
-                    <PostCard key={key} post={post} />
+                    <PostCard key={key} post={post} user={user} />
                   </Col>
                 </>
               )
