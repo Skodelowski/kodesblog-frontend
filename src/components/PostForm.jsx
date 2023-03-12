@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react'
 import axiosRequest from '@services/axiosRequest'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { Alert, Form, Button, Row, Col } from 'react-bootstrap'
 import TagsInput from '@components/TagsInput'
 
 const PostForm = (props) => {
-  const { postData, isAdmin, methode } = props
+  const { isAdmin, method } = props
 
-  const [post, setPost] = useState(postData || {})
+  const [post, setPost] = useState({})
   const [alert, setAlert] = useState(false)
   const [authorId, setAuthorId] = useState()
   const [categories, setCategories] = useState([])
@@ -17,6 +17,8 @@ const PostForm = (props) => {
   const author = JSON.parse(localStorage.getItem('user'))._id
 
   const navigate = useNavigate()
+
+  const postId = useParams()
 
   const getCategories = async () => {
     try {
@@ -44,7 +46,6 @@ const PostForm = (props) => {
 
   const handleChangeCategory = (e) => {
     e.preventDefault()
-    console.log(e.target.value)
     setPostCategory(e.target.value)
   }
 
@@ -60,9 +61,26 @@ const PostForm = (props) => {
   }
 
   useEffect(() => {
+    if (postId && postId.id) {
+      const getPostData = async (postId) => {
+        try {
+          await axiosRequest
+            .get(`/posts/post/${postId}`)
+            .then((res) => res.data.post)
+            .then((data) => {
+              setPost(data)
+              setImage({ preview: data.image })
+              setPostCategory(data.category)
+            })
+        } catch (err) {
+          console.log(err)
+        }
+      }
+      getPostData(postId.id)
+    }
     getCategories()
-    if (methode === 'add') setAuthorId(author)
-    else setAuthorId(postData.author)
+    if (method === 'add') setAuthorId(author)
+    else setAuthorId(post.author)
   }, [])
 
   const onSubmit = async (e) => {
@@ -79,7 +97,7 @@ const PostForm = (props) => {
     console.log(editPost)
 
     try {
-      if (methode === 'add') {
+      if (method === 'add') {
         await axiosRequest
           .post('/posts/add', editPost, {
             headers: { 'Content-Type': 'multipart/form-data' },
@@ -124,7 +142,7 @@ const PostForm = (props) => {
       {alert && <Alert variant="warning">{alert}</Alert>}
       <Form
         onSubmit={onSubmit}
-        method={methode === 'add' ? 'post' : 'put'}
+        method={method === 'add' ? 'post' : 'put'}
         encType="multipart/form-data"
       >
         <Form.Text id="author" name="author" value={authorId} type="hidden" />
@@ -146,6 +164,7 @@ const PostForm = (props) => {
           <Col className="col-md-3">
             <Form.Select
               aria-label="Default select example"
+              value={postCategory}
               onChange={handleChangeCategory}
             >
               <option>Choose a category</option>
@@ -166,7 +185,14 @@ const PostForm = (props) => {
           <Col>
             <Form.Group className="mb-3" controlId="formBasicContent">
               <Form.Label>Content</Form.Label>
-              <Form.Control as="textarea" rows={5} name="content" type="text" />
+              <Form.Control
+                as="textarea"
+                rows={5}
+                name="content"
+                type="text"
+                value={post.content || ''}
+                onChange={setFields}
+              />
             </Form.Group>
           </Col>
         </Row>
@@ -195,7 +221,6 @@ const PostForm = (props) => {
                     type="text"
                     name="imageName"
                     placeholder="Name of your image"
-                    value=""
                     onChange={setFields}
                   />
                 </Form.Group>
@@ -207,7 +232,6 @@ const PostForm = (props) => {
                     type="text"
                     name="imageDesc"
                     placeholder="Some alt text to explain the image"
-                    value=""
                     onChange={setFields}
                   />
                 </Form.Group>
@@ -225,13 +249,13 @@ const PostForm = (props) => {
         <Row>
           <Col>
             <Form.Group controlId="formActions" className="mb-3">
-              {methode === 'put' && isAdmin && (
+              {method === 'put' && isAdmin && (
                 <Button variant="danger" onClick={onDelete}>
                   Delete post
                 </Button>
               )}
               <Button variant="info" type="submit">
-                {methode === 'add' ? 'Publish' : 'Modify post'}
+                {method === 'add' ? 'Publish' : 'Modify post'}
               </Button>
             </Form.Group>
           </Col>

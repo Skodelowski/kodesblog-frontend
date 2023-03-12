@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Home from '@pages/Home'
 import Login from '@pages/Login'
 import Signup from '@pages/Signup'
-import CreatePost from '@pages/CreatePost'
+import EditPost from '@pages/EditPost'
 import UserProfile from '@pages/UserProfile'
 import UserProfileEdit from '@pages/UserProfileEdit'
 import Category from '@pages/Category'
@@ -30,7 +30,14 @@ function App() {
           path="categories/:slug"
           element={<Category user={currentUser} />}
         />
-        <Route path="post/create" element={<CreatePost />} />
+        <Route
+          path="post/create"
+          element={<EditPost method="add" user={currentUser} />}
+        />
+        <Route
+          path="post/:id/edit"
+          element={<EditPost method="edit" user={currentUser} />}
+        />
         <Route path="dashboard" element={<Dashboard user={currentUser} />} />
       </Routes>
     </Router>
