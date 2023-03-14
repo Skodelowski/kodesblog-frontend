@@ -8,6 +8,7 @@ import UserProfile from '@pages/UserProfile'
 import UserProfileEdit from '@pages/UserProfileEdit'
 import Category from '@pages/Category'
 import Dashboard from '@pages/Dashboard'
+import Post from '@pages/Post'
 import NavHeader from '@components/NavHeader'
 import './App.css'
 
@@ -38,6 +39,7 @@ function App() {
           path="post/:id/edit"
           element={<EditPost method="edit" user={currentUser} />}
         />
+        <Route path="post/:id" element={<Post user={currentUser} />} />
         <Route path="dashboard" element={<Dashboard user={currentUser} />} />
       </Routes>
     </Router>
