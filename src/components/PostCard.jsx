@@ -14,8 +14,7 @@ const PostCard = ({ post, user }) => {
   // 15 words insight
   const limitTextLength = (text) => {
     let textWordsLength = text.split(' ')
-
-    if (textWordsLength > 14)
+    if (textWordsLength.length > 14)
       return textWordsLength.slice(0, 15).join(' ') + ' [...]'
 
     return text
